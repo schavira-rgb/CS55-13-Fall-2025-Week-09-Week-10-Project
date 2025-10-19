@@ -1,6 +1,7 @@
 {
   "projects": {
-    "friendlyeats-codelab": "cs55-week7-auth"
+    "friendlyeats-codelab": "cs55-week7-auth",
+    "default": "code-snippet-manager-ed424"
   },
   "targets": {},
   "etags": {}

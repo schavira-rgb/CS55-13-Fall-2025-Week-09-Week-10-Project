@@ -10,6 +10,16 @@ import { initializeServerApp, initializeApp } from "firebase/app";
 // Import Firebase authentication function
 import { getAuth } from "firebase/auth";
 
+// Firebase configuration from environment variables
+const firebaseConfig = {
+  apiKey: process.env.FIREBASE_APIKEY,
+  authDomain: process.env.FIREBASE_AUTHDOMAIN,
+  projectId: process.env.FIREBASE_PROJECTID,
+  storageBucket: process.env.FIREBASE_STORAGEBUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGINGSENDERID,
+  appId: process.env.FIREBASE_APPID
+};
+
 // Create authenticated Firebase app instance for server-side rendering
 export async function getAuthenticatedAppForUser() {
   // Get the session cookie containing the user's authentication token
@@ -19,7 +29,7 @@ export async function getAuthenticatedAppForUser() {
   // This allows using Firebase SDK on the server with user context
   // https://github.com/firebase/firebase-js-sdk/issues/8863#issuecomment-2751401913
   const firebaseServerApp = initializeServerApp(
-    initializeApp(),                                 // Initialize baseFirebase app
+    initializeApp(firebaseConfig),                   // Initialize baseFirebase app with config
     { 
       authIdToken,                                  // Pass user's authentication token
     }  
