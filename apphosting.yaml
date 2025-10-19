@@ -3,17 +3,5 @@ runConfig:
   maxInstances: 2
 
 env:
-  - variable: GEMINI_API_KEY
-    secret: GEMINI_API_KEY
-  - variable: FIREBASE_APIKEY
-    value: "YOUR_ACTUAL_API_KEY"
-  - variable: FIREBASE_AUTHDOMAIN
-    value: "code-snippet-manager-ed424.firebaseapp.com"
-  - variable: FIREBASE_PROJECTID
-    value: "code-snippet-manager-ed424"
-  - variable: FIREBASE_STORAGEBUCKET
-    value: "code-snippet-manager-ed424.firebasestorage.app"
-  - variable: FIREBASE_MESSAGINGSENDERID
-    value: "YOUR_SENDER_ID"
-  - variable: FIREBASE_APPID
-    value: "YOUR_APP_ID"
+     - variable: GEMINI_API_KEY
+       secret: GEMINI_API_KEY
