@@ -1,35 +1,100 @@
 rules_version = '2';
 service cloud.firestore {
 
-  // Determine if the value of the field "key" is the same
-  // before and after the request.
+  // Helper function to check if a field hasn't changed during an update
+  // This prevents users from modifying certain protected fields
   function unchanged(key) {
-    return (key in resource.data) 
-      && (key in request.resource.data) 
-      && (resource.data[key] == request.resource.data[key]);
+    return (key in resource.data)              // Field exists in current document
+      && (key in request.resource.data)        // Field exists in updated document
+      && (resource.data[key] == request.resource.data[key]); // Values are the same
   }
 
   match /databases/{database}/documents {
-    // Restaurants:
-    //   - Authenticated user can read
-    //   - Authenticated user can create/update (for demo purposes only)
-    //   - Updates are allowed if no fields are added and name is unchanged
-    //   - Deletes are not allowed (default)
+    
+    // ============================================
+    // RESTAURANTS COLLECTION (Original from tutorial)
+    // ============================================
     match /restaurants/{restaurantId} {
+      
+      // Anyone can read restaurant data (no auth required for demo)
       allow read;
+      
+      // Only authenticated users can create new restaurants
       allow create: if request.auth != null;
+      
+      // Only authenticated users can update restaurants
+      // AND the restaurant name cannot be changed
       allow update: if request.auth != null
                     && unchanged("name");
       
-        // Ratings:
-        //   - Authenticated user can read
-        //   - Authenticated user can create if userId matches
-        //   - Deletes and updates are not allowed (default)
-        match /ratings/{ratingId} {
-          allow read;
-          allow create: if request.auth != null;
-          allow update: if request.auth != null
-                        && request.resource.data.userId == request.auth.uid;
+      // Deletes are NOT allowed (implicit - no delete rule)
+      
+      // Ratings subcollection for restaurants
+      match /ratings/{ratingId} {
+        
+        // Anyone can read ratings
+        allow read;
+        
+        // Only authenticated users can create ratings
+        allow create: if request.auth != null;
+        
+        // Users can only update their own ratings
+        // Check that the userId field matches the authenticated user's ID
+        allow update: if request.auth != null
+                      && request.resource.data.userId == request.auth.uid;
+        
+        // Deletes are NOT allowed (implicit)
+      }
+    }
+
+    // ============================================
+    // SNIPPETS COLLECTION (New - for code snippets)
+    // ============================================
+    match /snippets/{snippetId} {
+      
+      // READING: Only authenticated users can read snippets
+      // This protects your data from unauthenticated access
+      allow read: if request.auth != null;
+      
+      // CREATING: Users can create snippets only if:
+      //   1. They are authenticated (logged in)
+      //   2. The 'author' field in the new snippet matches their user ID
+      // This prevents users from creating snippets claiming to be someone else
+      allow create: if request.auth != null
+                    && request.resource.data.author == request.auth.uid;
+      
+      // UPDATING: Users can update snippets only if:
+      //   1. They are authenticated
+      //   2. They are the original author of the snippet
+      // This prevents users from editing other people's code snippets
+      allow update: if request.auth != null
+                    && request.auth.uid == resource.data.author;
+      
+      // DELETING: Users can delete snippets only if:
+      //   1. They are authenticated
+      //   2. They are the original author of the snippet
+      // This prevents users from deleting other people's code snippets
+      allow delete: if request.auth != null
+                    && request.auth.uid == resource.data.author;
+      
+      // Ratings subcollection for snippets
+      // Allows users to rate code snippets
+      match /ratings/{ratingId} {
+        
+        // READING: Authenticated users can read all ratings
+        allow read: if request.auth != null;
+        
+        // CREATING: Users can create a rating only if:
+        //   1. They are authenticated
+        //   2. The userId field in the rating matches their user ID
+        // This ensures users can only rate under their own name
+        allow create: if request.auth != null
+                      && request.resource.data.userId == request.auth.uid;
+        
+        // UPDATING/DELETING: Users can modify or remove their own ratings
+        // Checks that the userId in the existing rating matches the current user
+        allow update, delete: if request.auth != null
+                                && request.auth.uid == resource.data.userId;
       }
     }
   }
