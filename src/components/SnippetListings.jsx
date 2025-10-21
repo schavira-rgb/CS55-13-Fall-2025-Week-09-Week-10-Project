@@ -16,6 +16,10 @@ import { getSnippets, getLanguages, getFrameworks, getAllTags } from "@/src/lib/
 // Our CodeDisplay component to show code with syntax highlighting
 import CodeDisplay from "@/src/components/CodeDisplay";
 
+// Firebase auth hook to check if user is logged in
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/src/lib/firebase/clientApp";
+
 // ============================================
 // SNIPPET LISTINGS COMPONENT
 // ============================================
@@ -28,6 +32,9 @@ import CodeDisplay from "@/src/components/CodeDisplay";
  * @param {Object} props.searchParams - URL search parameters for filtering
  */
 export default function SnippetListings({ searchParams = {} }) {
+  // Get current authenticated user
+  const [user] = useAuthState(auth);
+
   // ============================================
   // STATE MANAGEMENT
   // ============================================
@@ -125,11 +132,23 @@ export default function SnippetListings({ searchParams = {} }) {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Code Snippet Manager</h1>
-        <p className="text-gray-600">
-          Browse and search through {snippets.length} code snippet{snippets.length !== 1 ? 's' : ''}
-        </p>
+      <div className="mb-8 flex justify-between items-start">
+        <div>
+          <h1 className="text-4xl font-bold mb-2">Code Snippet Manager</h1>
+          <p className="text-gray-600">
+            Browse and search through {snippets.length} code snippet{snippets.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+        
+        {/* Add Snippet Button - only show if user is logged in */}
+        {user && (
+          <Link
+            href="/add-snippet"
+            className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors"
+          >
+            + Add Snippet
+          </Link>
+        )}
       </div>
 
       {/* Filters Section */}
