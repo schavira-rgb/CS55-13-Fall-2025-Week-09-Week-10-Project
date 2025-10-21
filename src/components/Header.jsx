@@ -11,8 +11,6 @@ import {
   signOut,            // Function to sign out
   onIdTokenChanged,  // Listener for id token changes
 } from "@/src/lib/firebase/auth.js";
-// Import function to add sample restaurant
-import { addFakeRestaurantsAndReviews } from "@/src/lib/firebase/firestore.js";
 // Import cookies management functions
 import { setCookie, deleteCookie } from "cookies-next";
 
@@ -94,13 +92,6 @@ export default function Header({ initialUser }) {
                 {/* Display user's name in menu */}
                 <li>{user.displayName}</li> 
 
-                {/* Button to add sample restaurants */}
-                <li> 
-                  <a href="#" onClick={addFakeRestaurantsAndReviews}> 
-                    Add sample restaurants 
-                  </a> 
-                </li> 
-
                 {/* Sign out button */}
                 <li> 
                   <a href="#" onClick={handleSignOut}> 
@@ -122,4 +113,4 @@ export default function Header({ initialUser }) {
       )} 
     </header>
   );
-} 
+}
