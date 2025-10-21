@@ -69,8 +69,8 @@ export default function Header({ initialUser }) {
     <header>
       {/* App logo and name, link to home page */}
       <Link href="/" className="logo"> 
-        <img src="/friendly-eats.svg" alt="FriendlyEats" />
-        Friendly Eats
+        {/* <img src="/friendly-eats.svg" alt="FriendlyEats" /> */}
+        Code Snippet Manager
       </Link> 
       {user ? (
         // User signed-in, show profile menu
