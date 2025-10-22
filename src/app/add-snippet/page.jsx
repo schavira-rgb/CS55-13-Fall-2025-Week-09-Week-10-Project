@@ -95,7 +95,7 @@ export default function AddSnippetPage() {
         framework: formData.framework.trim() || null,
         tags: tagsArray,
         isPublic: formData.isPublic,
-        author: user?.uid || "anonymous",
+        author: user?.displayName || user?.email || "Anonymous User",
       };
 
       // Add to Firestore
