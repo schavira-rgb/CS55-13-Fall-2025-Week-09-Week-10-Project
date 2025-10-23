@@ -58,7 +58,7 @@ export async function POST(request) {
     
     // Get the Gemini Pro model
     // "gemini-pro" is optimized for text generation
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     // ============================================
     // STEP 4: CREATE AI PROMPT
