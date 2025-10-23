@@ -33,8 +33,8 @@ import CodeDisplay from "@/src/components/CodeDisplay";
  * Features:
  * - Display snippet with syntax highlighting
  * - AI "Explain Code" button (Gemini AI)
+ * - Edit button (navigates to edit form)
  * - Delete button (removes snippet from Firestore)
- * - Edit button (future implementation)
  * 
  * @param {Object} props
  * @param {string} props.snippetId - The Firestore document ID of the snippet
@@ -343,14 +343,14 @@ export default function SnippetDetail({ snippetId }) {
               : "🤖 Explain Code"}
           </button>
 
-          {/* Edit Button (placeholder for future implementation) */}
+          {/* Edit Button - Now navigates to edit page */}
           {user && (
-            <button
-              onClick={() => alert("Edit feature coming soon!")}
-              className="px-6 py-3 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 rounded-md font-medium transition-colors"
+            <Link
+              href={`/snippet/${snippet.id}/edit`}
+              className="px-6 py-3 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 rounded-md font-medium transition-colors inline-block"
             >
               ✏️ Edit
-            </button>
+            </Link>
           )}
 
           {/* Delete Button */}
