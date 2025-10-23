@@ -56,9 +56,9 @@ export async function POST(request) {
     // STEP 3: INITIALIZE GEMINI MODEL
     // ============================================
     
-    // Get the Gemini Pro model
-    // "gemini-pro" is optimized for text generation
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Get the Gemini
+    // "gemini-1.5-flash" is optimized for text generation
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     // ============================================
     // STEP 4: CREATE AI PROMPT
