@@ -26,7 +26,7 @@ import { auth } from "@/src/lib/firebase/clientApp";
 
 /**
  * SnippetListings Component
- * Displays a filterable list of code snippets
+ * Displays a filterable list of code snippets with AI-powered explanations
  * 
  * @param {Object} props
  * @param {Object} props.searchParams - URL search parameters for filtering
@@ -54,6 +54,18 @@ export default function SnippetListings({ searchParams = {} }) {
   const [selectedLanguage, setSelectedLanguage] = useState(searchParams.language || "");
   const [selectedFramework, setSelectedFramework] = useState(searchParams.framework || "");
   const [selectedTag, setSelectedTag] = useState(searchParams.tag || "");
+
+  // ============================================
+  // AI EXPLANATION STATE
+  // ============================================
+  
+  // Store explanations for each snippet by ID
+  // Example: { "snippet123": "This code does..." }
+  const [explanations, setExplanations] = useState({});
+  
+  // Track which snippet is currently being explained (loading state)
+  // Example: "snippet123" when that snippet's explanation is loading
+  const [loadingExplanation, setLoadingExplanation] = useState(null);
 
   // ============================================
   // DATA FETCHING
@@ -109,6 +121,66 @@ export default function SnippetListings({ searchParams = {} }) {
     setSelectedLanguage("");
     setSelectedFramework("");
     setSelectedTag("");
+  };
+
+  // ============================================
+  // AI EXPLANATION HANDLER
+  // ============================================
+
+  /**
+   * Handles the "Explain Code" button click
+   * Sends code to Gemini AI API and displays explanation
+   * 
+   * @param {Object} snippet - The snippet object to explain
+   */
+  const handleExplainCode = async (snippet) => {
+    // Check if we already have an explanation for this snippet
+    if (explanations[snippet.id]) {
+      // If explanation exists, remove it (toggle off)
+      const newExplanations = { ...explanations };
+      delete newExplanations[snippet.id];
+      setExplanations(newExplanations);
+      return;
+    }
+
+    // Set loading state for this specific snippet
+    setLoadingExplanation(snippet.id);
+
+    try {
+      // Call our API endpoint with the code and language
+      const response = await fetch("/api/explain-code", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          code: snippet.code,
+          language: snippet.language,
+        }),
+      });
+
+      // Parse the JSON response
+      const data = await response.json();
+
+      // Check if the request was successful
+      if (data.success) {
+        // Store the explanation in state using snippet ID as key
+        setExplanations((prev) => ({
+          ...prev,
+          [snippet.id]: data.explanation,
+        }));
+      } else {
+        // Show error if API request failed
+        alert(data.error || "Failed to explain code");
+      }
+    } catch (error) {
+      // Handle any network or parsing errors
+      console.error("Error explaining code:", error);
+      alert("Failed to explain code. Please try again.");
+    } finally {
+      // Clear loading state regardless of success or failure
+      setLoadingExplanation(null);
+    }
   };
 
   // ============================================
@@ -273,8 +345,29 @@ export default function SnippetListings({ searchParams = {} }) {
               {/* Code Display */}
               <CodeDisplay code={snippet.code} language={snippet.language} />
 
-              {/* Snippet Footer */}
+              {/* AI Explanation Section */}
+              {/* Show explanation if it exists for this snippet */}
+              {explanations[snippet.id] && (
+                <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                  <div className="flex items-start gap-2 mb-2">
+                    {/* Robot/AI Icon */}
+                    <span className="text-2xl">🤖</span>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-purple-900 mb-2">
+                        AI Explanation
+                      </h4>
+                      {/* Display the explanation with preserved formatting */}
+                      <div className="text-gray-700 whitespace-pre-wrap">
+                        {explanations[snippet.id]}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Snippet Footer with Action Buttons */}
               <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
+                {/* Author and Date Info */}
                 <div className="text-sm text-gray-500">
                   <span>By {snippet.author}</span>
                   <span className="mx-2">•</span>
@@ -283,13 +376,42 @@ export default function SnippetListings({ searchParams = {} }) {
                   </span>
                 </div>
                 
-                {/* View Details Link (for future detail page) */}
-                <Link
-                  href={`/snippet/${snippet.id}`}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors text-sm font-medium"
-                >
-                  View Details
-                </Link>
+                {/* Action Buttons Container */}
+                <div className="flex gap-2">
+                  {/* Explain Code Button */}
+                  <button
+                    onClick={() => handleExplainCode(snippet)}
+                    disabled={loadingExplanation === snippet.id}
+                    className={`
+                      px-4 py-2 rounded-md transition-colors text-sm font-medium
+                      ${
+                        explanations[snippet.id]
+                          ? "bg-purple-600 hover:bg-purple-700 text-white"
+                          : "bg-purple-100 hover:bg-purple-200 text-purple-800"
+                      }
+                      ${
+                        loadingExplanation === snippet.id
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }
+                    `}
+                  >
+                    {/* Show different text based on state */}
+                    {loadingExplanation === snippet.id
+                      ? "Explaining..." // Loading state
+                      : explanations[snippet.id]
+                      ? "Hide Explanation" // Explanation is showing
+                      : "🤖 Explain Code"} {/* Default state */}
+                  </button>
+
+                  {/* View Details Link */}
+                  <Link
+                    href={`/snippet/${snippet.id}`}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors text-sm font-medium"
+                  >
+                    View Details
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
