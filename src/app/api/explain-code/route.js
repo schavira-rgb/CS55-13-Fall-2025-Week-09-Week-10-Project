@@ -2,19 +2,27 @@
 // IMPORTS
 // ============================================
 
-// Import Google's Generative AI SDK for Gemini
-import { GoogleGenerativeAI } from "@google/generative-ai";
+// Import Firebase Genkit and Google AI plugin
+import { genkit } from 'genkit';
+import { googleAI, gemini20Flash } from '@genkit-ai/googleai';
 
 // Import Next.js server response utility
 import { NextResponse } from "next/server";
 
 // ============================================
-// INITIALIZE GEMINI AI
+// INITIALIZE GENKIT AI (PROFESSOR REQUIREMENT)
 // ============================================
 
-// Create a new Gemini AI instance using the API key from environment variables
-// The API key is stored securely in Firebase Secret Manager (GEMINI_API_KEY)
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Create Genkit AI instance with Google AI plugin and Gemini 2.0 Flash model
+// This uses Firebase Genkit framework as required by the course
+const ai = genkit({
+  plugins: [
+    googleAI({
+      apiKey: process.env.GEMINI_API_KEY, // Use your existing env variable
+    }),
+  ],
+  model: gemini20Flash, // Use Gemini 2.0 Flash as specified in tutorial
+});
 
 // ============================================
 // API ROUTE: POST /api/explain-code
@@ -23,8 +31,8 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 /**
  * POST Handler for Code Explanation API
  * 
- * This function receives code from the client, sends it to Gemini AI,
- * and returns an AI-generated explanation of what the code does.
+ * This function receives code from the client, sends it to Gemini AI via
+ * Firebase Genkit, and returns an AI-generated explanation.
  * 
  * @param {Request} request - The incoming HTTP request with code data
  * @returns {NextResponse} JSON response with explanation or error
@@ -53,15 +61,7 @@ export async function POST(request) {
     }
 
     // ============================================
-    // STEP 3: INITIALIZE GEMINI MODEL
-    // ============================================
-    
-    // Get the Gemini
-    // "gemini-1.5-flash" is optimized for text generation
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
-    // ============================================
-    // STEP 4: CREATE AI PROMPT
+    // STEP 3: CREATE AI PROMPT
     // ============================================
     
     // Construct a detailed prompt that tells Gemini:
@@ -85,26 +85,26 @@ Keep the explanation beginner-friendly but technically accurate.
 `;
 
     // ============================================
-    // STEP 5: SEND REQUEST TO GEMINI AI
+    // STEP 4: SEND REQUEST TO GEMINI VIA GENKIT
     // ============================================
     
-    // Send the prompt to Gemini and wait for response
-    const result = await model.generateContent(prompt);
-    
-    // Extract the response from the result
-    const response = await result.response;
-    
-    // Get the text explanation from the response
-    const explanation = response.text();
+    // Use Genkit's generate method (much simpler than direct SDK)
+    const { text } = await ai.generate({
+      prompt: prompt,
+      config: {
+        temperature: 0.7,      // Balance between creativity and consistency
+        maxOutputTokens: 1000, // Limit response length (~750 words)
+      },
+    });
 
     // ============================================
-    // STEP 6: RETURN SUCCESS RESPONSE
+    // STEP 5: RETURN SUCCESS RESPONSE
     // ============================================
     
     // Send back the explanation to the client
     return NextResponse.json({ 
-      explanation,      // The AI-generated explanation text
-      success: true     // Flag indicating successful processing
+      explanation: text,  // The AI-generated explanation text from Genkit
+      success: true       // Flag indicating successful processing
     });
 
   } catch (error) {
