@@ -138,45 +138,40 @@ export default function LanguageSnippets({ languageName }) {
   return (
     <div className="language-snippets-container">
       {/* Header Section - CENTERED */}
-      <div className="language-snippets-header" style={{ textAlign: 'center' }}>
+      <div className="language-snippets-header" style={{ 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        textAlign: 'center'
+      }}>
         {/* Back to Home Link */}
         <Link href="/" className="back-link">
           ← Back to All Languages
         </Link>
 
-        {/* Language Title - Centered */}
-        <div className="language-title-section" style={{ 
+        {/* Language Title, Sort Dropdown, and Add Button Container */}
+        <div style={{ 
           display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
-          gap: '0.5rem',
-          margin: '1rem 0'
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1rem',
+          margin: '1.5rem 0',
+          width: '100%',
+          maxWidth: '400px'
         }}>
+          {/* Language Title */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <span className="language-page-icon" style={{ fontSize: '2rem' }}>
               {getLanguageIcon(languageName)}
             </span>
             <h1 style={{ margin: 0 }}>{languageName}</h1>
           </div>
+          
           <p className="language-snippet-count" style={{ margin: 0 }}>
             {snippets.length} {snippets.length === 1 ? "snippet" : "snippets"}
           </p>
-        </div>
 
-        {/* Sort Dropdown */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          gap: '1rem',
-          alignItems: 'center',
-          margin: '1.5rem 0'
-        }}>
-          <label htmlFor="sort-select" style={{ 
-            color: '#ECEFF4',
-            fontWeight: '500'
-          }}>
-            Sort by:
-          </label>
+          {/* Sort Dropdown */}
           <select
             id="sort-select"
             value={sortBy}
@@ -190,7 +185,8 @@ export default function LanguageSnippets({ languageName }) {
               fontSize: '1rem',
               cursor: 'pointer',
               outline: 'none',
-              fontWeight: '500'
+              fontWeight: '500',
+              width: '100%'
             }}
           >
             <option value="newest">Newest First</option>
@@ -198,16 +194,18 @@ export default function LanguageSnippets({ languageName }) {
             <option value="titleAZ">Title A-Z</option>
             <option value="titleZA">Title Z-A</option>
           </select>
-        </div>
 
-        {/* Add Snippet Button - Centered */}
-        {user && (
-          <div style={{ display: 'flex', justifyContent: 'center', margin: '1rem 0' }}>
-            <Link href="/add-snippet" className="add-snippet-button-small">
+          {/* Add Snippet Button */}
+          {user && (
+            <Link href="/add-snippet" className="add-snippet-button-small" style={{
+              width: '100%',
+              textAlign: 'center',
+              display: 'block'
+            }}>
               + Add Snippet
             </Link>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Snippets Grid */}
