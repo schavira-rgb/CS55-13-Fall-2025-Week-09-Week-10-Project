@@ -66,9 +66,18 @@ export default function Header({ initialUser }) {
   return (
     <header>
       {/* App logo and name, link to home page */}
-      <Link href="/" className="logo"> 
-        {/* <img src="/friendly-eats.svg" alt="FriendlyEats" /> */}
-        Code Snippet Manager
+      <Link 
+        href="/" 
+        className="logo group inline-flex items-center gap-3 px-5 py-3 rounded-lg bg-gradient-to-r from-[#2E3440] to-[#3B4252] hover:from-[#3B4252] hover:to-[#434C5E] transition-all duration-300 hover:shadow-lg hover:scale-105 border border-[#4C566A]/30"
+      > 
+        {/* Code icon */}
+        <span className="text-2xl group-hover:rotate-12 transition-transform duration-300">
+          {"</>"}
+        </span>
+        {/* App title with enhanced typography */}
+        <span className="font-bold text-xl tracking-tight text-[#ECEFF4] group-hover:text-[#61AFEF] transition-colors duration-300">
+          Code Snippet Manager
+        </span>
       </Link> 
       {user ? (
         // User signed-in, show profile menu
