@@ -1533,17 +1533,59 @@ header {
 }
 
 .logo {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: #ECEFF4;
+  text-decoration: none;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   & img {
     margin-inline-end: 10px;
   }
+}
 
-  color: white;
-  text-decoration: none;
+.logo:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(97, 175, 239, 0.5);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  transform: scale(1.02);
+}
+
+.logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
+  background: rgba(97, 175, 239, 0.2);
+  border: 1px solid rgba(97, 175, 239, 0.3);
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.logo:hover .logo-icon {
+  background: rgba(97, 175, 239, 0.3);
+  transform: rotate(6deg);
+}
+
+.logo-text {
+  font-weight: 700;
   font-size: 1.25rem;
-  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: #ECEFF4;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .menu {

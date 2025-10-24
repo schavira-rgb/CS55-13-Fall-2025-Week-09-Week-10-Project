@@ -66,16 +66,13 @@ export default function Header({ initialUser }) {
   return (
     <header>
       {/* App logo and name, link to home page */}
-      <Link 
-        href="/" 
-        className="logo group inline-flex items-center gap-3 px-6 py-3.5 rounded-xl bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:scale-[1.02] border-2 border-white/20 hover:border-[#61AFEF]/50"
-      > 
+      <Link href="/" className="logo"> 
         {/* Code icon with background */}
-        <span className="flex items-center justify-center w-10 h-10 text-2xl bg-[#61AFEF]/20 rounded-lg group-hover:bg-[#61AFEF]/30 group-hover:rotate-6 transition-all duration-300 border border-[#61AFEF]/30">
+        <span className="logo-icon">
           {"</>"}
         </span>
         {/* App title with enhanced typography */}
-        <span className="font-bold text-xl tracking-tight text-[#ECEFF4] drop-shadow-sm">
+        <span className="logo-text">
           Code Snippet Manager
         </span>
       </Link> 
