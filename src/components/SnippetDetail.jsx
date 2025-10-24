@@ -208,9 +208,9 @@ export default function SnippetDetail({ snippetId }) {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="text-center">
-          <div className="text-lg text-gray-600">Loading snippet...</div>
+      <div className="snippet-detail-container">
+        <div className="loading-container">
+          <div className="loading-text">Loading snippet...</div>
         </div>
       </div>
     );
@@ -222,15 +222,12 @@ export default function SnippetDetail({ snippetId }) {
 
   if (error || !snippet) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
-          <p className="text-lg text-red-800 font-semibold">
+      <div className="snippet-error-container">
+        <div className="snippet-error-box">
+          <p className="snippet-error-text">
             {error || "Snippet not found"}
           </p>
-          <Link
-            href="/"
-            className="mt-4 inline-block px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
-          >
+          <Link href="/" className="snippet-error-link">
             ← Back to Home
           </Link>
         </div>
@@ -243,61 +240,55 @@ export default function SnippetDetail({ snippetId }) {
   // ============================================
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="snippet-detail-container">
       {/* Back Button */}
-      <Link
-        href="/"
-        className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6"
-      >
+      <Link href="/" className="back-to-snippets-link">
         ← Back to All Snippets
       </Link>
 
       {/* Snippet Card */}
-      <div className="bg-white rounded-lg shadow-lg p-8">
+      <div className="snippet-detail-card">
         {/* Header Section */}
-        <div className="mb-6">
-          <h1 className="text-4xl font-bold mb-3">{snippet.title}</h1>
-          <p className="text-gray-600 text-lg">{snippet.description}</p>
+        <div className="snippet-detail-header">
+          <h1 className="snippet-detail-title">{snippet.title}</h1>
+          <p className="snippet-detail-description">{snippet.description}</p>
         </div>
 
         {/* Tags/Badges */}
-        <div className="flex gap-2 mb-6 flex-wrap">
-          <span className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
+        <div className="snippet-detail-tags">
+          <span className="tag-language">
             {snippet.language}
           </span>
           {snippet.framework && (
-            <span className="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
+            <span className="tag-framework-badge">
               {snippet.framework}
             </span>
           )}
           {snippet.tags &&
             snippet.tags.map((tag, index) => (
-              <span
-                key={index}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm"
-              >
+              <span key={index} className="tag-standard">
                 #{tag}
               </span>
             ))}
         </div>
 
         {/* Code Display */}
-        <div className="mb-6">
+        <div className="snippet-code-section">
           <CodeDisplay code={snippet.code} language={snippet.language} />
         </div>
 
         {/* AI Explanation Section */}
         {explanation && (
-          <div className="mb-6 p-6 bg-purple-50 border border-purple-200 rounded-lg">
-            <div className="flex items-start gap-3">
+          <div className="ai-explanation-box">
+            <div className="ai-explanation-content">
               {/* Robot/AI Icon */}
-              <span className="text-3xl">🤖</span>
-              <div className="flex-1">
-                <h3 className="font-bold text-purple-900 text-xl mb-3">
+              <span className="ai-icon">🤖</span>
+              <div className="ai-text-container">
+                <h3 className="ai-explanation-title">
                   AI Explanation
                 </h3>
                 {/* Display the explanation with preserved formatting */}
-                <div className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+                <div className="ai-explanation-text">
                   {explanation}
                 </div>
               </div>
@@ -306,35 +297,31 @@ export default function SnippetDetail({ snippetId }) {
         )}
 
         {/* Author and Date Info */}
-        <div className="mb-6 pb-6 border-b border-gray-200">
-          <div className="text-sm text-gray-500">
-            <span className="font-medium">By {snippet.author}</span>
-            <span className="mx-2">•</span>
+        <div className="snippet-author-info">
+          <div className="snippet-metadata">
+            <span className="metadata-author">By {snippet.author}</span>
+            <span className="metadata-separator">•</span>
             <span>{snippet.createdAt?.toDate().toLocaleDateString()}</span>
             {snippet.isPublic && (
               <>
-                <span className="mx-2">•</span>
-                <span className="text-green-600 font-medium">Public</span>
+                <span className="metadata-separator">•</span>
+                <span className="metadata-public">Public</span>
               </>
             )}
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3 flex-wrap">
+        <div className="snippet-action-buttons">
           {/* Explain Code Button */}
           <button
             onClick={handleExplainCode}
             disabled={loadingExplanation}
-            className={`
-              px-6 py-3 rounded-md font-medium transition-colors
-              ${
-                explanation
-                  ? "bg-purple-600 hover:bg-purple-700 text-white"
-                  : "bg-purple-100 hover:bg-purple-200 text-purple-800"
-              }
-              ${loadingExplanation ? "opacity-50 cursor-not-allowed" : ""}
-            `}
+            className={`explain-button ${
+              explanation
+                ? "explain-button-active"
+                : "explain-button-inactive"
+            }`}
           >
             {loadingExplanation
               ? "Explaining..."
@@ -347,7 +334,7 @@ export default function SnippetDetail({ snippetId }) {
           {user && (
             <Link
               href={`/snippet/${snippet.id}/edit`}
-              className="px-6 py-3 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 rounded-md font-medium transition-colors inline-block"
+              className="edit-button-link"
             >
               ✏️ Edit
             </Link>
@@ -358,7 +345,7 @@ export default function SnippetDetail({ snippetId }) {
             <button
               onClick={() => setShowDeleteConfirm(true)}
               disabled={deleting}
-              className="px-6 py-3 bg-red-100 hover:bg-red-200 text-red-800 rounded-md font-medium transition-colors"
+              className="delete-button"
             >
               🗑️ Delete
             </button>
@@ -368,27 +355,24 @@ export default function SnippetDetail({ snippetId }) {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md mx-4">
-            <h2 className="text-2xl font-bold mb-4">Delete Snippet?</h2>
-            <p className="text-gray-600 mb-6">
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2 className="modal-title">Delete Snippet?</h2>
+            <p className="modal-message">
               Are you sure you want to delete "{snippet.title}"? This action cannot be undone.
             </p>
-            <div className="flex gap-3">
+            <div className="modal-buttons">
               <button
                 onClick={handleDelete}
                 disabled={deleting}
-                className={`
-                  flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium transition-colors
-                  ${deleting ? "opacity-50 cursor-not-allowed" : ""}
-                `}
+                className="modal-button-delete"
               >
                 {deleting ? "Deleting..." : "Yes, Delete"}
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={deleting}
-                className="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md font-medium transition-colors"
+                className="modal-button-cancel"
               >
                 Cancel
               </button>

@@ -19,7 +19,7 @@ export default async function LanguagePage({ params }) {
   const { name } = await params;
 
   return (
-    <div className="min-h-screen bg-[#ECEFF4]">
+    <div className="page-wrapper-offwhite">
       {/* Pass the language name to the component */}
       <LanguageSnippets languageName={name} />
     </div>

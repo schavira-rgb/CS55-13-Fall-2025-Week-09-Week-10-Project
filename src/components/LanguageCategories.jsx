@@ -83,7 +83,7 @@ export default function LanguageCategories() {
       sql: "🗄️",
       bash: "💻",
     };
-    return icons[language.toLowerCase()] || "📝";
+    return icons[language.toLowerCase()] || "📄";
   };
 
   // ============================================
@@ -92,10 +92,10 @@ export default function LanguageCategories() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#ECEFF4] py-12">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center">
-            <div className="text-lg text-gray-600">Loading languages...</div>
+      <div className="language-categories-page">
+        <div className="language-categories-container">
+          <div className="loading-container">
+            <div className="loading-text">Loading languages...</div>
           </div>
         </div>
       </div>
@@ -107,23 +107,20 @@ export default function LanguageCategories() {
   // ============================================
 
   return (
-    <div className="min-h-screen bg-[#ECEFF4] py-12">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="language-categories-page">
+      <div className="language-categories-container">
         {/* Header Section */}
-        <div className="mb-12 text-center">
-          <h1 className="text-5xl font-bold text-[#2E3440] mb-4">
+        <div className="language-categories-header">
+          <h1 className="language-categories-title">
             Code Snippet Manager
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="language-categories-subtitle">
             Browse {languages.reduce((sum, lang) => sum + lang.count, 0)} snippets across {languages.length} languages
           </p>
           
           {/* Add Snippet Button */}
           {user && (
-            <Link
-              href="/add-snippet"
-              className="inline-block px-8 py-4 bg-[#61AFEF] hover:bg-[#4A9FDF] text-white rounded-lg font-semibold text-lg transition-colors shadow-lg"
-            >
+            <Link href="/add-snippet" className="add-snippet-button">
               + Add New Snippet
             </Link>
           )}
@@ -131,51 +128,48 @@ export default function LanguageCategories() {
 
         {/* Language Category Cards Grid */}
         {languages.length === 0 ? (
-          <div className="bg-white border border-gray-200 rounded-lg p-12 text-center shadow-md">
-            <p className="text-2xl text-gray-700 font-semibold mb-4">
+          <div className="empty-state">
+            <p className="empty-state-title">
               No snippets yet!
             </p>
-            <p className="text-gray-600 mb-6">
+            <p className="empty-state-description">
               Start building your collection by adding your first code snippet.
             </p>
             {user && (
-              <Link
-                href="/add-snippet"
-                className="inline-block px-6 py-3 bg-[#61AFEF] hover:bg-[#4A9FDF] text-white rounded-lg font-medium transition-colors"
-              >
+              <Link href="/add-snippet" className="empty-state-button">
                 Add Your First Snippet
               </Link>
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="language-cards-grid">
             {languages.map((language) => (
               <Link
                 key={language.name}
                 href={`/language/${language.name}`}
-                className="group"
+                className="language-card-link"
               >
-                <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 border-2 border-transparent hover:border-[#61AFEF] transform hover:-translate-y-2">
+                <div className="language-card">
                   {/* Language Icon */}
-                  <div className="text-6xl mb-4 text-center">
+                  <div className="language-icon">
                     {getLanguageIcon(language.name)}
                   </div>
                   
                   {/* Language Name */}
-                  <h2 className="text-2xl font-bold text-[#2E3440] mb-2 text-center group-hover:text-[#61AFEF] transition-colors">
+                  <h2 className="language-name">
                     {language.name}
                   </h2>
                   
                   {/* Snippet Count */}
-                  <div className="text-center">
-                    <span className="inline-block px-4 py-2 bg-[#ECEFF4] text-[#2E3440] rounded-full font-semibold">
+                  <div className="snippet-count-container">
+                    <span className="snippet-count-badge">
                       {language.count} {language.count === 1 ? "snippet" : "snippets"}
                     </span>
                   </div>
                   
                   {/* Arrow indicator on hover */}
-                  <div className="mt-4 text-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-[#61AFEF] font-medium">
+                  <div className="browse-arrow">
+                    <span className="browse-arrow-text">
                       Browse →
                     </span>
                   </div>
@@ -186,8 +180,8 @@ export default function LanguageCategories() {
         )}
 
         {/* Footer Info */}
-        <div className="mt-16 text-center">
-          <p className="text-gray-600">
+        <div className="language-categories-footer">
+          <p className="language-categories-footer-text">
             Select a language to browse all snippets in that category
           </p>
         </div>

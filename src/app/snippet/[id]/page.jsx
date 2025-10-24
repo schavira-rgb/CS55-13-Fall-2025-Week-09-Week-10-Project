@@ -19,7 +19,7 @@ export default async function SnippetPage({ params }) {
   const { id } = await params;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="page-wrapper-gray">
       {/* Pass the snippet ID to the detail component */}
       <SnippetDetail snippetId={id} />
     </div>

@@ -36,12 +36,9 @@
   "devDependencies": {
     "@next/eslint-plugin-next": "15.1.6",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "autoprefixer": "^10.4.21",
     "eslint": "^8.57.1",
     "eslint-config-next": "15.1.6",
     "eslint-config-prettier": "^9.1.0",
-    "postcss": "^8.5.6",
-    "prettier": "^3.5.3",
-    "tailwindcss": "^4.1.16"
+    "prettier": "^3.5.3"
   }
 }

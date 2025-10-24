@@ -19,7 +19,7 @@ export default async function EditSnippetPage({ params }) {
   const { id } = await params;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="page-wrapper-gray-padded">
       {/* Pass the snippet ID to the edit form component */}
       <SnippetEditForm snippetId={id} />
     </div>

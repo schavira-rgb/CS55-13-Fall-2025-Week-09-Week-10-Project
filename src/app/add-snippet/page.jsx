@@ -116,10 +116,8 @@ export default function AddSnippetPage() {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="text-center">
-          <div className="text-lg text-gray-600">Loading...</div>
-        </div>
+      <div className="loading-state">
+        <div className="loading-text">Loading...</div>
       </div>
     );
   }
@@ -130,12 +128,12 @@ export default function AddSnippetPage() {
 
   if (!user) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-8 text-center">
-          <p className="text-lg text-yellow-800 font-semibold">
+      <div className="not-authenticated-warning">
+        <div className="warning-box">
+          <p className="warning-title">
             Please sign in to add snippets
           </p>
-          <p className="text-yellow-700 mt-2">
+          <p className="warning-text">
             You need to be logged in to create code snippets.
           </p>
         </div>
@@ -148,28 +146,28 @@ export default function AddSnippetPage() {
   // ============================================
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="add-snippet-container">
       {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Add New Code Snippet</h1>
-        <p className="text-gray-600">
+      <div className="add-snippet-header">
+        <h1 className="add-snippet-title">Add New Code Snippet</h1>
+        <p className="add-snippet-subtitle">
           Create a new code snippet to share with the community
         </p>
       </div>
 
       {/* Error Message */}
       {error && (
-        <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <div className="error-message">
           {error}
         </div>
       )}
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">
+      <form onSubmit={handleSubmit} className="snippet-form">
         {/* Title Field */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Title <span className="text-red-500">*</span>
+        <div className="form-group">
+          <label className="form-label">
+            Title <span className="required-star">*</span>
           </label>
           <input
             type="text"
@@ -177,14 +175,14 @@ export default function AddSnippetPage() {
             value={formData.title}
             onChange={handleChange}
             placeholder="e.g., React useState Hook Example"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="form-input"
             required
           />
         </div>
 
         {/* Description Field */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="form-group">
+          <label className="form-label">
             Description
           </label>
           <textarea
@@ -193,14 +191,14 @@ export default function AddSnippetPage() {
             onChange={handleChange}
             placeholder="Brief description of what this code does..."
             rows="3"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="form-textarea"
           />
         </div>
 
         {/* Code Field */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Code <span className="text-red-500">*</span>
+        <div className="form-group">
+          <label className="form-label">
+            Code <span className="required-star">*</span>
           </label>
           <textarea
             name="code"
@@ -208,23 +206,23 @@ export default function AddSnippetPage() {
             onChange={handleChange}
             placeholder="Paste your code here..."
             rows="12"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+            className="form-textarea form-textarea-code"
             required
           />
         </div>
 
         {/* Language and Framework Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="form-grid-2">
           {/* Language Field */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Language <span className="text-red-500">*</span>
+            <label className="form-label">
+              Language <span className="required-star">*</span>
             </label>
             <select
               name="language"
               value={formData.language}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="form-select"
               required
             >
               <option value="JavaScript">JavaScript</option>
@@ -247,7 +245,7 @@ export default function AddSnippetPage() {
 
           {/* Framework Field */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="form-label">
               Framework (Optional)
             </label>
             <input
@@ -256,14 +254,14 @@ export default function AddSnippetPage() {
               value={formData.framework}
               onChange={handleChange}
               placeholder="e.g., React, Vue, Django"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="form-input"
             />
           </div>
         </div>
 
         {/* Tags Field */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="form-group">
+          <label className="form-label">
             Tags (comma-separated)
           </label>
           <input
@@ -272,43 +270,33 @@ export default function AddSnippetPage() {
             value={formData.tags}
             onChange={handleChange}
             placeholder="e.g., hooks, state, beginner"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="form-input"
           />
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="form-helper-text">
             Separate tags with commas
           </p>
         </div>
 
         {/* Public Checkbox */}
-        <div className="mb-6">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              name="isPublic"
-              checked={formData.isPublic}
-              onChange={handleChange}
-              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <span className="ml-2 text-sm text-gray-700">
-              Make this snippet public (visible to everyone)
-            </span>
+        <div className="checkbox-container">
+          <input
+            type="checkbox"
+            name="isPublic"
+            checked={formData.isPublic}
+            onChange={handleChange}
+            className="form-checkbox"
+          />
+          <label className="checkbox-label">
+            Make this snippet public (visible to everyone)
           </label>
         </div>
 
         {/* Form Buttons */}
-        <div className="flex gap-4">
+        <div className="form-buttons">
           <button
             type="submit"
             disabled={saving}
-            className={`
-              px-6 py-3 rounded-md font-medium transition-colors
-              ${
-                saving
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700"
-              }
-              text-white
-            `}
+            className="form-button-primary"
           >
             {saving ? "Saving..." : "Save Snippet"}
           </button>
@@ -316,7 +304,7 @@ export default function AddSnippetPage() {
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md font-medium transition-colors"
+            className="form-button-secondary"
           >
             Cancel
           </button>

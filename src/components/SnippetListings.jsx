@@ -117,9 +117,9 @@ export default function SnippetListings({ searchParams = {} }) {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="text-center">
-          <div className="text-lg text-gray-600">Loading snippets...</div>
+      <div className="listings-container">
+        <div className="loading-container">
+          <div className="loading-text">Loading snippets...</div>
         </div>
       </div>
     );
@@ -130,41 +130,38 @@ export default function SnippetListings({ searchParams = {} }) {
   // ============================================
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="listings-container">
       {/* Page Header */}
-      <div className="mb-8 flex justify-between items-start">
+      <div className="listings-header">
         <div>
-          <h1 className="text-4xl font-bold mb-2">Code Snippet Manager</h1>
-          <p className="text-gray-600">
+          <h1 className="listings-title">Code Snippet Manager</h1>
+          <p className="listings-subtitle">
             Browse and search through {snippets.length} code snippet{snippets.length !== 1 ? 's' : ''}
           </p>
         </div>
         
         {/* Add Snippet Button - only show if user is logged in */}
         {user && (
-          <Link
-            href="/add-snippet"
-            className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors"
-          >
+          <Link href="/add-snippet" className="add-snippet-button-header">
             + Add Snippet
           </Link>
         )}
       </div>
 
       {/* Filters Section */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-xl font-semibold mb-4">Filters</h2>
+      <div className="filters-section">
+        <h2 className="filters-title">Filters</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="filters-grid">
           {/* Language Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="form-label">
               Language
             </label>
             <select
               value={selectedLanguage}
               onChange={handleLanguageChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="form-select"
             >
               <option value="">All Languages</option>
               {languages.map((lang) => (
@@ -177,13 +174,13 @@ export default function SnippetListings({ searchParams = {} }) {
 
           {/* Framework Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="form-label">
               Framework
             </label>
             <select
               value={selectedFramework}
               onChange={handleFrameworkChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="form-select"
             >
               <option value="">All Frameworks</option>
               {frameworks.map((fw) => (
@@ -196,13 +193,13 @@ export default function SnippetListings({ searchParams = {} }) {
 
           {/* Tag Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="form-label">
               Tag
             </label>
             <select
               value={selectedTag}
               onChange={handleTagChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="form-select"
             >
               <option value="">All Tags</option>
               {tags.map((tag) => (
@@ -218,7 +215,7 @@ export default function SnippetListings({ searchParams = {} }) {
         {(selectedLanguage || selectedFramework || selectedTag) && (
           <button
             onClick={handleClearFilters}
-            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md transition-colors"
+            className="clear-filters-button"
           >
             Clear All Filters
           </button>
@@ -228,43 +225,37 @@ export default function SnippetListings({ searchParams = {} }) {
       {/* Snippets List */}
       {snippets.length === 0 ? (
         // Empty State
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-8 text-center">
-          <p className="text-lg text-yellow-800 font-semibold">No snippets found</p>
-          <p className="text-yellow-700 mt-2">
+        <div className="listings-empty-state">
+          <p className="listings-empty-title">No snippets found</p>
+          <p className="listings-empty-text">
             {selectedLanguage || selectedFramework || selectedTag
               ? "Try adjusting your filters"
               : "Add your first code snippet to get started!"}
           </p>
         </div>
       ) : (
-        // Snippets Grid
-        <div className="space-y-6">
+        // Snippets List
+        <div className="snippets-list">
           {snippets.map((snippet) => (
-            <div
-              key={snippet.id}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6"
-            >
+            <div key={snippet.id} className="snippet-list-card">
               {/* Snippet Header */}
-              <div className="mb-4">
-                <h3 className="text-2xl font-bold mb-2">{snippet.title}</h3>
-                <p className="text-gray-600">{snippet.description}</p>
+              <div className="snippet-list-header">
+                <h3 className="snippet-list-title">{snippet.title}</h3>
+                <p className="snippet-list-description">{snippet.description}</p>
               </div>
 
               {/* Tags/Badges */}
-              <div className="flex gap-2 mb-4 flex-wrap">
-                <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
+              <div className="snippet-list-tags">
+                <span className="tag-language">
                   {snippet.language}
                 </span>
                 {snippet.framework && (
-                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
+                  <span className="tag-framework-badge">
                     {snippet.framework}
                   </span>
                 )}
                 {snippet.tags && snippet.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-                  >
+                  <span key={index} className="tag-standard">
                     #{tag}
                   </span>
                 ))}
@@ -274,11 +265,11 @@ export default function SnippetListings({ searchParams = {} }) {
               <CodeDisplay code={snippet.code} language={snippet.language} />
 
               {/* Snippet Footer with Action Buttons */}
-              <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
+              <div className="snippet-list-footer">
                 {/* Author and Date Info */}
-                <div className="text-sm text-gray-500">
+                <div className="snippet-list-metadata">
                   <span>By {snippet.author}</span>
-                  <span className="mx-2">•</span>
+                  <span className="metadata-separator">•</span>
                   <span>
                     {snippet.createdAt?.toDate().toLocaleDateString()}
                   </span>
@@ -287,7 +278,7 @@ export default function SnippetListings({ searchParams = {} }) {
                 {/* View Details Link */}
                 <Link
                   href={`/snippet/${snippet.id}`}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors text-sm font-medium"
+                  className="view-details-button"
                 >
                   View Details
                 </Link>

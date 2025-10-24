@@ -181,9 +181,9 @@ export default function SnippetEditForm({ snippetId }) {
 
   if (loading) {
     return (
-      <div className="max-w-3xl mx-auto px-4">
-        <div className="text-center">
-          <div className="text-lg text-gray-600">Loading snippet...</div>
+      <div className="snippet-edit-container">
+        <div className="loading-container">
+          <div className="loading-text">Loading snippet...</div>
         </div>
       </div>
     );
@@ -195,13 +195,10 @@ export default function SnippetEditForm({ snippetId }) {
 
   if (error) {
     return (
-      <div className="max-w-3xl mx-auto px-4">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
-          <p className="text-lg text-red-800 font-semibold">{error}</p>
-          <Link
-            href="/"
-            className="mt-4 inline-block px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
-          >
+      <div className="snippet-edit-container">
+        <div className="snippet-error-box">
+          <p className="snippet-error-text">{error}</p>
+          <Link href="/" className="snippet-error-link">
             ← Back to Home
           </Link>
         </div>
@@ -214,79 +211,79 @@ export default function SnippetEditForm({ snippetId }) {
   // ============================================
 
   return (
-    <div className="max-w-3xl mx-auto px-4">
+    <div className="snippet-edit-container">
       {/* Header with Back Button */}
-      <div className="mb-6">
+      <div className="snippet-edit-header">
         <Link
           href={`/snippet/${snippetId}`}
-          className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4"
+          className="back-to-snippet-link"
         >
           ← Back to Snippet
         </Link>
-        <h1 className="text-4xl font-bold">Edit Snippet</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className="snippet-edit-title">Edit Snippet</h1>
+        <p className="snippet-edit-subtitle">
           Make changes to your code snippet below
         </p>
       </div>
 
       {/* Edit Form */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-8">
+      <form onSubmit={handleSubmit} className="snippet-edit-form">
         {/* Title Field */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Title <span className="text-red-500">*</span>
+        <div className="form-group">
+          <label className="form-label">
+            Title <span className="required-star">*</span>
           </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g., React useState Hook Example"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="form-input"
             required
           />
         </div>
 
         {/* Description Field */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Description <span className="text-red-500">*</span>
+        <div className="form-group">
+          <label className="form-label">
+            Description <span className="required-star">*</span>
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Briefly describe what this code does..."
             rows={3}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="form-textarea"
             required
           />
         </div>
 
         {/* Code Field */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Code <span className="text-red-500">*</span>
+        <div className="form-group">
+          <label className="form-label">
+            Code <span className="required-star">*</span>
           </label>
           <textarea
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="Paste your code here..."
             rows={12}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+            className="form-textarea form-textarea-code"
             required
           />
         </div>
 
         {/* Language and Framework Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="form-grid-2">
           {/* Language Field */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Language <span className="text-red-500">*</span>
+            <label className="form-label">
+              Language <span className="required-star">*</span>
             </label>
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="form-select"
               required
             >
               <option value="">Select a language</option>
@@ -310,7 +307,7 @@ export default function SnippetEditForm({ snippetId }) {
 
           {/* Framework Field */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="form-label">
               Framework (Optional)
             </label>
             <input
@@ -318,14 +315,14 @@ export default function SnippetEditForm({ snippetId }) {
               value={framework}
               onChange={(e) => setFramework(e.target.value)}
               placeholder="e.g., React, Next.js, Django"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="form-input"
             />
           </div>
         </div>
 
         {/* Tags Field */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="form-group">
+          <label className="form-label">
             Tags (Optional)
           </label>
           <input
@@ -333,44 +330,39 @@ export default function SnippetEditForm({ snippetId }) {
             value={tags}
             onChange={(e) => setTags(e.target.value)}
             placeholder="e.g., hooks, state management, beginner"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="form-input"
           />
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="form-helper-text">
             Separate tags with commas
           </p>
         </div>
 
         {/* Public/Private Toggle */}
-        <div className="mb-8">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={isPublic}
-              onChange={(e) => setIsPublic(e.target.checked)}
-              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <span className="ml-2 text-sm text-gray-700">
-              Make this snippet public
-            </span>
+        <div className="checkbox-container">
+          <input
+            type="checkbox"
+            checked={isPublic}
+            onChange={(e) => setIsPublic(e.target.checked)}
+            className="form-checkbox"
+          />
+          <label className="checkbox-label">
+            Make this snippet public
           </label>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3">
+        <div className="edit-form-buttons">
           <button
             type="submit"
             disabled={saving}
-            className={`
-              flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors
-              ${saving ? "opacity-50 cursor-not-allowed" : ""}
-            `}
+            className="edit-form-button-save"
           >
             {saving ? "Saving Changes..." : "💾 Save Changes"}
           </button>
           
           <Link
             href={`/snippet/${snippetId}`}
-            className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md font-medium transition-colors text-center"
+            className="edit-form-button-cancel"
           >
             Cancel
           </Link>

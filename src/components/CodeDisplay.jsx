@@ -49,24 +49,22 @@ export default function CodeDisplay({ code, language = "javascript" }) {
   };
 
   return (
-    <div className="relative">
+    <div className="code-display-wrapper">
       {/* Header with language label and copy button */}
-      <div className="flex justify-between items-center mb-2 px-1">
+      <div className="code-display-header">
         {/* Language label - shows what programming language this is */}
-        <span className="text-sm text-gray-500 font-mono uppercase">
+        <span className="code-language-label">
           {language}
         </span>
         
         {/* Copy button - changes color and text when clicked */}
         <button
           onClick={handleCopy}
-          className={`
-            px-3 py-1 text-sm rounded transition-all duration-200
-            ${copied 
-              ? 'bg-green-600 text-white'  // Green when copied
-              : 'bg-blue-600 hover:bg-blue-700 text-white'  // Blue normally
-            }
-          `}
+          className={`code-copy-button ${
+            copied 
+              ? 'code-copy-button-copied'
+              : 'code-copy-button-default'
+          }`}
           aria-label="Copy code to clipboard"
         >
           {/* Show checkmark when copied, otherwise show "Copy Code" */}

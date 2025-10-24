@@ -77,7 +77,7 @@ export default function LanguageSnippets({ languageName }) {
       sql: "🗄️",
       bash: "💻",
     };
-    return icons[language.toLowerCase()] || "📝";
+    return icons[language.toLowerCase()] || "📄";
   };
 
   // ============================================
@@ -86,10 +86,8 @@ export default function LanguageSnippets({ languageName }) {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="text-center">
-          <div className="text-lg text-gray-600">Loading snippets...</div>
-        </div>
+      <div className="snippets-loading">
+        <div className="snippets-loading-text">Loading snippets...</div>
       </div>
     );
   }
@@ -99,25 +97,20 @@ export default function LanguageSnippets({ languageName }) {
   // ============================================
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
+    <div className="language-snippets-container">
       {/* Header Section */}
-      <div className="mb-12">
+      <div className="language-snippets-header">
         {/* Back to Home Link */}
-        <Link
-          href="/"
-          className="inline-flex items-center text-[#61AFEF] hover:text-[#4A9FDF] font-medium mb-6 transition-colors"
-        >
+        <Link href="/" className="back-link">
           ← Back to All Languages
         </Link>
 
         {/* Language Title */}
-        <div className="flex items-center gap-4 mb-4">
-          <span className="text-6xl">{getLanguageIcon(languageName)}</span>
-          <div>
-            <h1 className="text-5xl font-bold text-[#2E3440]">
-              {languageName}
-            </h1>
-            <p className="text-xl text-gray-600 mt-2">
+        <div className="language-title-section">
+          <span className="language-page-icon">{getLanguageIcon(languageName)}</span>
+          <div className="language-title-text">
+            <h1>{languageName}</h1>
+            <p className="language-snippet-count">
               {snippets.length} {snippets.length === 1 ? "snippet" : "snippets"}
             </p>
           </div>
@@ -125,10 +118,7 @@ export default function LanguageSnippets({ languageName }) {
 
         {/* Add Snippet Button */}
         {user && (
-          <Link
-            href="/add-snippet"
-            className="inline-block px-6 py-3 bg-[#61AFEF] hover:bg-[#4A9FDF] text-white rounded-lg font-medium transition-colors shadow-md"
-          >
+          <Link href="/add-snippet" className="add-snippet-button-small">
             + Add Snippet
           </Link>
         )}
@@ -136,65 +126,59 @@ export default function LanguageSnippets({ languageName }) {
 
       {/* Snippets Grid */}
       {snippets.length === 0 ? (
-        <div className="bg-white border border-gray-200 rounded-lg p-12 text-center shadow-md">
-          <p className="text-2xl text-gray-700 font-semibold mb-4">
+        <div className="language-empty-state">
+          <p className="language-empty-title">
             No {languageName} snippets yet
           </p>
-          <p className="text-gray-600 mb-6">
+          <p className="language-empty-description">
             Be the first to add a {languageName} code snippet!
           </p>
           {user && (
-            <Link
-              href="/add-snippet"
-              className="inline-block px-6 py-3 bg-[#61AFEF] hover:bg-[#4A9FDF] text-white rounded-lg font-medium transition-colors"
-            >
+            <Link href="/add-snippet" className="add-snippet-button-small">
               Add {languageName} Snippet
             </Link>
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="snippets-grid">
           {snippets.map((snippet) => (
             <Link
               key={snippet.id}
               href={`/snippet/${snippet.id}`}
-              className="group"
+              className="snippet-card-link"
             >
-              <div className="bg-white rounded-lg shadow-md hover:shadow-2xl transition-all duration-300 p-6 border-2 border-transparent hover:border-[#61AFEF] h-full flex flex-col transform hover:-translate-y-1">
+              <div className="snippet-card">
                 {/* Snippet Title */}
-                <h2 className="text-2xl font-bold text-[#2E3440] mb-3 group-hover:text-[#61AFEF] transition-colors">
+                <h2 className="snippet-card-title">
                   {snippet.title}
                 </h2>
 
                 {/* Snippet Description */}
-                <p className="text-gray-600 mb-4 flex-grow line-clamp-3">
+                <p className="snippet-description">
                   {snippet.description}
                 </p>
 
                 {/* Tags/Badges */}
-                <div className="flex gap-2 flex-wrap mb-4">
+                <div className="snippet-tags">
                   {snippet.framework && (
-                    <span className="px-3 py-1 bg-[#61AFEF] bg-opacity-20 text-[#61AFEF] rounded-full text-sm font-semibold">
+                    <span className="tag-framework">
                       {snippet.framework}
                     </span>
                   )}
                   {snippet.tags && snippet.tags.slice(0, 3).map((tag, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-[#ECEFF4] text-[#2E3440] rounded-full text-sm"
-                    >
+                    <span key={index} className="tag-regular">
                       #{tag}
                     </span>
                   ))}
                   {snippet.tags && snippet.tags.length > 3 && (
-                    <span className="px-3 py-1 bg-[#ECEFF4] text-[#2E3440] rounded-full text-sm">
+                    <span className="tag-regular">
                       +{snippet.tags.length - 3} more
                     </span>
                   )}
                 </div>
 
                 {/* Footer with Author and Date */}
-                <div className="pt-4 border-t border-gray-200 flex justify-between items-center text-sm text-gray-500">
+                <div className="snippet-footer">
                   <span>By {snippet.author}</span>
                   <span>
                     {snippet.createdAt?.toDate().toLocaleDateString()}
@@ -202,8 +186,8 @@ export default function LanguageSnippets({ languageName }) {
                 </div>
 
                 {/* View Details Indicator */}
-                <div className="mt-4 text-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="text-[#61AFEF] font-medium">
+                <div className="view-code-arrow">
+                  <span className="view-code-text">
                     View Code →
                   </span>
                 </div>
