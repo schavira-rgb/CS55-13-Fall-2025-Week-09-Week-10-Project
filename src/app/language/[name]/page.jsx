@@ -12,16 +12,20 @@ import LanguageSnippets from "@/src/components/LanguageSnippets";
  * Dynamic route: /language/[name]
  * 
  * @param {Object} params - Route parameters
- * @param {string} params.name - The language name from the URL
+ * @param {string} params.name - The language name from the URL (may be URL-encoded)
  */
 export default async function LanguagePage({ params }) {
   // Extract the language name from the URL
   const { name } = await params;
+  
+  // Decode URL-encoded characters (e.g., C%2B%2B becomes C++)
+  // This fixes issues with special characters like + in language names
+  const decodedLanguage = decodeURIComponent(name);
 
   return (
     <div className="page-wrapper-offwhite">
-      {/* Pass the language name to the component */}
-      <LanguageSnippets languageName={name} />
+      {/* Pass the decoded language name to the component */}
+      <LanguageSnippets languageName={decodedLanguage} />
     </div>
   );
 }
