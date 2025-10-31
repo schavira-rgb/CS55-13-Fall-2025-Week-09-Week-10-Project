@@ -330,8 +330,8 @@ export default function SnippetDetail({ snippetId }) {
               : "🤖 Explain Code"}
           </button>
 
-          {/* Edit Button - Now navigates to edit page */}
-          {user && (
+          {/* Edit Button - Only show if user owns this snippet */}
+          {user && snippet.userId === user.uid && (
             <Link
               href={`/snippet/${snippet.id}/edit`}
               className="edit-button-link"
@@ -340,8 +340,8 @@ export default function SnippetDetail({ snippetId }) {
             </Link>
           )}
 
-          {/* Delete Button */}
-          {user && (
+          {/* Delete Button - Only show if user owns this snippet */}
+          {user && snippet.userId === user.uid && (
             <button
               onClick={() => setShowDeleteConfirm(true)}
               disabled={deleting}
