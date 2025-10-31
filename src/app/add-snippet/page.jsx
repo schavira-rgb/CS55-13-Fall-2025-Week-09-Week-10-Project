@@ -96,6 +96,7 @@ export default function AddSnippetPage() {
         tags: tagsArray,
         isPublic: formData.isPublic,
         author: user?.displayName || user?.email || "Anonymous User",
+        userId: user.uid,
       };
 
       // Add to Firestore
